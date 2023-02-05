@@ -9,6 +9,14 @@ const routes: Routes = [
   { path: '', component: HomePageComponent },
   { path: 'about', component: AboutPageComponent },
   { path: 'contact', component: ContactPageComponent },
+
+  // load de rutas hijas con  Lazy load
+  {
+    path: 'countries',
+    loadChildren: () =>
+      import('./countries/countries.module').then((m) => m.CountriesModule),
+  },
+
   { path: '**', redirectTo: 'home' },
 ];
 
