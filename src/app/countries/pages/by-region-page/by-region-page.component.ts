@@ -1,20 +1,32 @@
 import { Component } from '@angular/core';
+
 import { Country } from '../../interfaces/country.interface';
 import { CountriesService } from '../../services/countries.service';
+
+type Region = 'Africa' | 'Americas' | 'Asia' | 'Europe' | 'Oceania';
 
 @Component({
   selector: 'app-by-region-page',
   templateUrl: './by-region-page.component.html',
-  styles: [
-  ]
+  styles: [],
 })
 export class ByRegionPageComponent {
   public countries: Country[] = [];
+  public regions: Region[] = [
+    'Africa',
+    'Americas',
+    'Asia',
+    'Europe',
+    'Oceania',
+  ];
+  public selectedRegion?: Region;
 
   constructor(private readonly countriesService: CountriesService) {}
 
-  searchByRegion(term: string): void {
-    this.countriesService.searchRegion(term).subscribe((countries) => {
+  searchByRegion(region: Region): void {
+    this.selectedRegion = region;
+
+    this.countriesService.searchRegion(region).subscribe((countries) => {
       this.countries = countries;
     });
   }
