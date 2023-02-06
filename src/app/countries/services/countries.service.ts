@@ -1,13 +1,20 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, delay, map, Observable, of } from 'rxjs';
-import { Country } from '../interfaces/country.interface';
+import { catchError, map, Observable, of, tap } from 'rxjs';
+
+import { CacheStore, Country } from '../interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CountriesService {
   private apiUrl: string = 'https://restcountries.com/v3.1';
+
+  public cacheStore: CacheStore = {
+    byCapital: { term: '', countries: [] },
+    byCountries: { term: '', countries: [] },
+    byRegion: { region: '', countries: [] },
+  };
 
   constructor(private http: HttpClient) {}
 
@@ -28,15 +35,16 @@ export class CountriesService {
     );
   }
 
-  searchCapital(query: string): Observable<Country[]> {
+  searchCapital(term: string): Observable<Country[]> {
     // http retorna observabel - NO estoy haciendo la req aqui, xq no tengo el  .subscribe
     return (
       this.http
-        .get<Country[]>(`${this.apiUrl}/capital/${query}`)
+        .get<Country[]>(`${this.apiUrl}/capital/${term}`)
         // si atrapa el error, con el  of()  return 1 nuevo Observable con []
         .pipe(
-          catchError((error) => of([]))
+          catchError((error) => of([])),
           // delay(1200)
+          tap((countries) => (this.cacheStore.byCapital = { term, countries }))
         )
     );
   }
