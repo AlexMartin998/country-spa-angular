@@ -8,12 +8,16 @@ import { Country } from '../../interfaces/country.interface';
 })
 export class ByCapitalPageComponent {
   public countries: Country[] = [];
+  public isLoading: boolean = false;
 
   constructor(private readonly countriesService: CountriesService) {}
 
   searchByCapital(term: string): void {
+    this.isLoading = true;
+
     this.countriesService.searchCapital(term).subscribe((countries) => {
       this.countries = countries;
+      this.isLoading = false;
     });
   }
 }
