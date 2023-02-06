@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, of } from 'rxjs';
+import { catchError, Observable, of, map } from 'rxjs';
 import { Country } from '../interfaces/country.interface';
 
 @Injectable({
@@ -10,6 +10,14 @@ export class CountriesService {
   private apiUrl: string = 'https://restcountries.com/v3.1';
 
   constructor(private http: HttpClient) {}
+
+  searchCountryByAlphaCode(alphaCode: string): Observable<Country | null> {
+    // la api retorna 1 arr
+    return this.http.get<Country[]>(`${this.apiUrl}/alpha/${alphaCode}`).pipe(
+      map((countries) => countries[0]),
+      catchError((error) => of(null))
+    );
+  }
 
   searchCapital(query: string): Observable<Country[]> {
     // http retorna observabel - NO estoy haciendo la req aqui, xq no tengo el  .subscribe
