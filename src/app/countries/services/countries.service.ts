@@ -13,10 +13,10 @@ export class CountriesService {
 
   private getCountriesResponse(url: string): Observable<Country[]> {
     return this.http.get<Country[]>(url).pipe(
-      catchError(() => of([])),
+      catchError(() => of([]))
 
       // delay a partir de aqui
-      delay(1200)
+      // delay(1200)
     );
   }
 
@@ -35,8 +35,8 @@ export class CountriesService {
         .get<Country[]>(`${this.apiUrl}/capital/${query}`)
         // si atrapa el error, con el  of()  return 1 nuevo Observable con []
         .pipe(
-          catchError((error) => of([])),
-          delay(1200)
+          catchError((error) => of([]))
+          // delay(1200)
         )
     );
   }
