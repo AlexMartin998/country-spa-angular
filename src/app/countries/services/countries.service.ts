@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { catchError, Observable, of } from 'rxjs';
 import { Country } from '../interfaces/country.interface';
 
 @Injectable({
@@ -13,6 +13,11 @@ export class CountriesService {
 
   searchCapital(query: string): Observable<Country[]> {
     // http retorna observabel - NO estoy haciendo la req aqui, xq no tengo el  .subscribe
-    return this.http.get<Country[]>(`${this.apiUrl}/capital/${query}`);
+    return (
+      this.http
+        .get<Country[]>(`${this.apiUrl}/capital/${query}`)
+        // si atrapa el error, con el  of()  return 1 nuevo Observable con []
+        .pipe(catchError((error) => of([])))
+    );
   }
 }
